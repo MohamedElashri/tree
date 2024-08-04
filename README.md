@@ -28,7 +28,7 @@ Follow these steps to install the script and make it available globally on your 
    Or copy the script contents manually into a new file:
 
    ```bash
-   nano $HOME/.local/bin/tree.sh
+   nano $HOME/.local/bin/tree
    ```
 
    Paste the script and save the file.
@@ -36,7 +36,7 @@ Follow these steps to install the script and make it available globally on your 
 3. **Make the Script Executable**: Change the permissions of the script to make it executable.
 
    ```bash
-   chmod +x $HOME/.local/bin/tree.sh
+   chmod +x $HOME/.local/bin/tree
    ```
 
 4. **Add to Path**: Ensure your `.bashrc` or `.zshrc` includes `$HOME/.local/bin` in your `PATH`. Add the following line if it isn't present:
