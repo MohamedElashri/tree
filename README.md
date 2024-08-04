@@ -91,8 +91,3 @@ You can use the script from any terminal session. Here's how to use it:
 - If the command is not found, ensure that `$HOME/.local/bin` is in your `PATH`.
 - If you encounter permission issues, check the directory permissions you are attempting to list.
 ```
-
-### Key Points:
-- **Installation**: Steps guide you through creating a `bin` directory, downloading the script, and setting up the environment.
-- **Usage**: Provides examples of how to use the script from any location.
-- **Customization**: Encourages modifying the script for specific needs.
