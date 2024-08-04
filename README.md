@@ -84,8 +84,7 @@ You can use the script from any terminal session. Here's how to use it:
 ## Notes
 
 - Ensure your terminal has the necessary permissions to read the directories you want to list.
-- This script provides basic functionality and may not cover all edge cases of the full `tree` command.
-- Customize the script as needed to fit your specific requirements.
+- This script provides basic functionality and may not cover all edge cases of the full `tree`. 
 
 ## Troubleshooting
 
@@ -97,5 +96,3 @@ You can use the script from any terminal session. Here's how to use it:
 - **Installation**: Steps guide you through creating a `bin` directory, downloading the script, and setting up the environment.
 - **Usage**: Provides examples of how to use the script from any location.
 - **Customization**: Encourages modifying the script for specific needs.
-
-With these instructions, you can easily install and use your custom `tree` script from anywhere on your system.
