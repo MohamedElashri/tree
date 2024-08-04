@@ -90,4 +90,3 @@ You can use the script from any terminal session. Here's how to use it:
 
 - If the command is not found, ensure that `$HOME/.local/bin` is in your `PATH`.
 - If you encounter permission issues, check the directory permissions you are attempting to list.
-```
