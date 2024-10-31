@@ -1,13 +1,6 @@
-# Poor man tree command 
+# Poor Man Tree Command
 
-This script mimics the basic functionality of the `tree` command with a focus on the `-L` option, allowing you to list directory contents up to a specified depth.
-
-## Features
-
-- List directory contents in a tree-like format.
-- Specify the maximum depth for listing with a default of 1.
-- Defaults to the current directory if no path is provided.
-- Simple help option to understand usage.
+This script mimics the basic functionality of the `tree` command, allowing you to list directory contents in a tree-like format with a focus on specifying depth.
 
 ## Installation
 
@@ -63,16 +56,22 @@ You can use the script from any terminal session. Here's how to use it:
   tree
   ```
 
-- **List a Specific Directory**: Specify a directory to list its contents.
+- **List a Specific Directory**: Use the `-p` or `--path` option to specify a directory to list its contents.
 
   ```bash
-  tree /path/to/directory
+  tree -p /path/to/directory
   ```
 
-- **Specify a Depth**: Use a second argument to set the maximum depth.
+- **Specify a Depth**: Use the `-d` or `--depth` option to set the maximum depth.
 
   ```bash
-  tree /path/to/directory 3
+  tree -p /path/to/directory -d 3
+  ```
+
+- **List the Current Directory with a Specific Depth**: Specify only the depth for the current directory.
+
+  ```bash
+  tree -d 3
   ```
 
 - **Help**: View the usage instructions.
@@ -84,7 +83,7 @@ You can use the script from any terminal session. Here's how to use it:
 ## Notes
 
 - Ensure your terminal has the necessary permissions to read the directories you want to list.
-- This script provides basic functionality and may not cover all edge cases of the full `tree`. 
+- This script provides basic functionality and may not cover all edge cases of the full `tree` command.
 
 ## Troubleshooting
 
