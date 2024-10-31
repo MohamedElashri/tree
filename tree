@@ -12,15 +12,16 @@ list_directory() {
         return
     fi
 
-    # Get the list of entries in the directory
-    local entries
-    entries=$(ls -A "$path" 2>/dev/null)
+    # Loop through the entries in the directory
+    local entries=()
+    while IFS= read -r -d '' entry; do
+        entries+=("$entry")
+    done < <(find "$path" -mindepth 1 -maxdepth 1 -print0 2>/dev/null)
 
-    # Loop through the entries
-    local last_index=$(($(echo "$entries" | wc -l) - 1))
-    local index=0
-    while IFS= read -r entry; do
-        local entry_path="$path/$entry"
+    local last_index=$((${#entries[@]} - 1))
+    for index in "${!entries[@]}"; do
+        local entry_path="${entries[$index]}"
+        local entry_name="$(basename "$entry_path")"
         local connector new_prefix
 
         if [[ "$index" -eq "$last_index" ]]; then
@@ -32,15 +33,13 @@ list_directory() {
         fi
 
         # Print the entry
-        echo "${prefix}${connector}${entry}"
+        echo "${prefix}${connector}${entry_name}"
 
         # If the entry is a directory, recurse into it
         if [[ -d "$entry_path" ]]; then
             list_directory "$entry_path" $((level + 1)) "$max_depth" "$new_prefix"
         fi
-
-        index=$((index + 1))
-    done <<< "$entries"
+    done
 }
 
 # Main function to initiate the tree listing
@@ -55,13 +54,49 @@ tree() {
     list_directory "$path" 1 "$max_depth" ""
 }
 
-# Check for help argument
-if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    echo "Usage: $0 [directory] [max_depth]"
-    echo "If no directory is specified, the current directory is used."
-    echo "If no max_depth is specified, the default is 1."
-    exit 0
-fi
+# Enhanced help function to provide better usage information
+print_help() {
+    cat <<EOF
+Usage: $0 [OPTIONS] [directory] [max_depth]
 
-# Run the tree function with optional arguments
-tree "$1" "$2"
+List the contents of directories in a tree-like format up to a specified depth.
+
+Options:
+  -h, --help        Show this help message and exit
+  -p, --path PATH   Specify the path to start listing (default is current directory)
+  -d, --depth DEPTH Specify the maximum depth to list (default is 1)
+
+Examples:
+  $0                List the current directory up to depth 1
+  $0 -p /home/user  List the /home/user directory up to depth 1
+  $0 -p /home/user -d 3  List the /home/user directory up to depth 3
+EOF
+}
+
+# Parse arguments
+path="."
+max_depth=1
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|--help)
+            print_help
+            exit 0
+            ;;
+        -p|--path)
+            path="$2"
+            shift 2
+            ;;
+        -d|--depth)
+            max_depth="$2"
+            shift 2
+            ;;
+        *)
+            echo "Unknown option: $1"
+            print_help
+            exit 1
+            ;;
+    esac
+done
+
+# Run the tree function with parsed arguments
+tree "$path" "$max_depth"
