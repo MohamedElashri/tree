@@ -1,5 +1,30 @@
 #!/bin/bash
 
+# Handle installation if --install flag is passed
+if [ "$1" = "--install" ]; then
+    # Create ~/.local/bin if it doesn't exist
+    mkdir -p ~/.local/bin
+
+    # Download the script to ~/.local/bin/tree
+    cp "$0" ~/.local/bin/tree
+    chmod +x ~/.local/bin/tree
+
+    # Add ~/.local/bin to PATH if not already there
+    if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+        shell_rc="$HOME/.bashrc"
+        # Check if using zsh
+        if [ -n "$ZSH_VERSION" ]; then
+            shell_rc="$HOME/.zshrc"
+        fi
+        echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$shell_rc"
+        export PATH="$HOME/.local/bin:$PATH"
+    fi
+
+    echo "Installation complete! You can now use 'tree' command."
+    echo "Please restart your terminal or run: source ~/.bashrc (or ~/.zshrc)"
+    exit 0
+fi
+
 # Default values
 max_depth=2  # Default depth of 2 levels, use -1 for unlimited
 current_depth=0
