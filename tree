@@ -1,102 +1,135 @@
 #!/bin/bash
 
-# Function to list directories up to a specified depth
-list_directory() {
-    local path="$1"
-    local level="$2"
-    local max_depth="$3"
-    local prefix="$4"
+# Default values
+max_depth=2  # Default depth of 2 levels, use -1 for unlimited
+current_depth=0
+dir_count=0
+file_count=0
+show_hidden=false  # Don't show hidden files by default
 
-    # Stop if current level exceeds max depth
-    if [[ "$level" -gt "$max_depth" ]]; then
+# ANSI color codes
+COLOR_DIR="\033[1;34m"    # Bold blue for directories
+COLOR_FILE="\033[0m"      # Default color for regular files
+COLOR_SYMLINK="\033[1;36m"  # Bold cyan for symbolic links
+COLOR_EXEC="\033[1;32m"     # Bold green for executables
+COLOR_RESET="\033[0m"
+
+print_usage() {
+    echo "Usage: $0 [OPTIONS] [directory]"
+    echo "Options:"
+    echo "  -L level     Descend only level directories deep (default: 2)"
+    echo "  -a           Show all (including hidden files)"
+    echo "  -h           Display this help message"
+}
+
+# Function to print the tree structure
+print_tree() {
+    local path="$1"
+    local prefix="$2"
+    local depth="$3"
+
+    # Check if we've reached maximum depth
+    if [ $max_depth -ne -1 ] && [ $depth -gt $max_depth ]; then
         return
     fi
 
-    # Loop through the entries in the directory
-    local entries=()
-    while IFS= read -r -d '' entry; do
-        entries+=("$entry")
-    done < <(find "$path" -mindepth 1 -maxdepth 1 -print0 2>/dev/null)
+    # Get list of files and directories, sorted alphabetically
+    local ls_opts="-1"
+    if [ "$show_hidden" = true ]; then
+        ls_opts="${ls_opts}A"
+    fi
+    local items=($(ls $ls_opts "$path" 2>/dev/null | sort))
 
-    local last_index=$((${#entries[@]} - 1))
-    for index in "${!entries[@]}"; do
-        local entry_path="${entries[$index]}"
-        local entry_name="$(basename "$entry_path")"
-        local connector new_prefix
+    local count=${#items[@]}
+    local index=0
 
-        if [[ "$index" -eq "$last_index" ]]; then
-            connector="└── "
-            new_prefix="$prefix    "
+    for item in "${items[@]}"; do
+        ((index++))
+        local full_path="$path/$item"
+        
+        # Determine the next prefix based on whether this is the last item
+        local next_prefix
+        if [ $index -eq $count ]; then
+            next_prefix="$prefix└── "
+            current_prefix="$prefix└── "
         else
-            connector="├── "
-            new_prefix="$prefix│   "
+            next_prefix="$prefix├── "
+            current_prefix="$prefix├── "
         fi
 
-        # Print the entry
-        echo "${prefix}${connector}${entry_name}"
-
-        # If the entry is a directory, recurse into it
-        if [[ -d "$entry_path" ]]; then
-            list_directory "$entry_path" $((level + 1)) "$max_depth" "$new_prefix"
+        # Determine the type and color of the item
+        if [ -L "$full_path" ]; then
+            # Symbolic link
+            local link_target=$(readlink "$full_path")
+            echo -e "$prefix$current_prefix${COLOR_SYMLINK}$item -> $link_target${COLOR_RESET}"
+        elif [ -d "$full_path" ]; then
+            # Directory
+            echo -e "$prefix$current_prefix${COLOR_DIR}$item${COLOR_RESET}"
+            ((dir_count++))
+            
+            # Recursively process directory
+            if [ $index -eq $count ]; then
+                print_tree "$full_path" "$prefix    " $((depth + 1))
+            else
+                print_tree "$full_path" "$prefix│   " $((depth + 1))
+            fi
+        else
+            # Regular file
+            if [ -x "$full_path" ]; then
+                # Executable file
+                echo -e "$prefix$current_prefix${COLOR_EXEC}$item${COLOR_RESET}"
+            else
+                # Regular file
+                echo -e "$prefix$current_prefix${COLOR_FILE}$item${COLOR_RESET}"
+            fi
+            ((file_count++))
         fi
     done
 }
 
-# Main function to initiate the tree listing
-tree() {
-    local path="${1:-.}"     # Use current directory if no path is specified
-    local max_depth="${2:-1}" # Default depth is 1
-
-    # Print the initial directory
-    echo "$path"
-
-    # Start listing from the initial path
-    list_directory "$path" 1 "$max_depth" ""
-}
-
-# Enhanced help function to provide better usage information
-print_help() {
-    cat <<EOF
-Usage: $0 [OPTIONS] [directory] [max_depth]
-
-List the contents of directories in a tree-like format up to a specified depth.
-
-Options:
-  -h, --help        Show this help message and exit
-  -p, --path PATH   Specify the path to start listing (default is current directory)
-  -d, --depth DEPTH Specify the maximum depth to list (default is 1)
-
-Examples:
-  $0                List the current directory up to depth 1
-  $0 -p /home/user  List the /home/user directory up to depth 1
-  $0 -p /home/user -d 3  List the /home/user directory up to depth 3
-EOF
-}
-
-# Parse arguments
-path="."
-max_depth=1
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        -h|--help)
-            print_help
+# Parse command line arguments
+while getopts "L:ah" opt; do
+    case $opt in
+        L)
+            max_depth=$OPTARG
+            if ! [[ "$max_depth" =~ ^[0-9]+$ ]]; then
+                echo "Error: -L requires a numeric argument"
+                exit 1
+            fi
+            ;;
+        h)
+            print_usage
             exit 0
             ;;
-        -p|--path)
-            path="$2"
-            shift 2
-            ;;
-        -d|--depth)
-            max_depth="$2"
-            shift 2
-            ;;
-        *)
-            echo "Unknown option: $1"
-            print_help
+        \?)
+            echo "Invalid option: -$OPTARG"
+            print_usage
             exit 1
+            ;;
+        a)
+            show_hidden=true
             ;;
     esac
 done
 
-# Run the tree function with parsed arguments
-tree "$path" "$max_depth"
+# Shift the arguments to get the directory
+shift $((OPTIND-1))
+
+# Set the starting directory
+start_dir="${1:-.}"
+
+# Check if directory exists
+if [ ! -d "$start_dir" ]; then
+    echo "Error: Directory '$start_dir' does not exist"
+    exit 1
+fi
+
+# Print the root directory name
+echo -e "${COLOR_DIR}${start_dir}${COLOR_RESET}"
+
+# Start the recursive function
+print_tree "$start_dir" "" 0
+
+# Print summary
+echo
+echo "$dir_count directories, $file_count files"
