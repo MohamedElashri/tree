@@ -1,9 +1,7 @@
 # Poor Man's Tree Command
-
 A lightweight bash implementation of the `tree` command that displays directory structure with colorization and depth control. This script provides basic tree-like directory listing with colored output for different file types (directories, files, symlinks, executables).
 
 ## Features
-
 - 🎨 Color-coded output:
   - Directories: Bold Blue
   - Regular Files: Default Color
@@ -16,22 +14,42 @@ A lightweight bash implementation of the `tree` command that displays directory 
 
 ## Installation
 
+### Quick Install
+
+⚠️ Security Warning: Always inspect script content before running installation commands! You can view the script here first.
+
+```bash
+curl -sL https://github.com/MohamedElashri/tree/raw/refs/heads/main/tree | bash -s -- --install
+```
+This one-liner will automatically:
+- Create ~/.local/bin directory if it doesn't exist
+- Download the script and install it as 'tree'
+- Make it executable
+- Add ~/.local/bin to your PATH (if needed)
+- Configure your shell (supports both bash and zsh)
+
+After installation, you might need to restart your terminal or run:
+```bash
+source ~/.bashrc  # if using bash
+# or
+source ~/.zshrc   # if using zsh
+```
+
+### Manual Installation
+If you prefer to install manually or the quick install doesn't work:
+
 1. **Create a local bin directory** (if it doesn't exist):
    ```bash
    mkdir -p ~/.local/bin
    ```
-
-2. **Download/Copy the script**:
+2. **Download the script**:
    ```bash
-   # Copy the script to your local bin
-   cp tree ~/.local/bin/tree
+   curl -o ~/.local/bin/tree https://github.com/MohamedElashri/tree/raw/refs/heads/main/tree
    ```
-
 3. **Make it executable**:
    ```bash
    chmod +x ~/.local/bin/tree
    ```
-
 4. **Add to PATH** (if not already done):
    Add this line to your `~/.bashrc` or `~/.zshrc`:
    ```bash
@@ -43,19 +61,16 @@ A lightweight bash implementation of the `tree` command that displays directory 
    ```
 
 ## Usage
-
 ```bash
 tree [OPTIONS] [directory]
 ```
 
 ### Options
-
 - `-L level`  : Set maximum display depth (default: 2)
 - `-a`        : Show all files, including hidden ones
 - `-h`        : Display help message
 
 ### Examples
-
 ```bash
 # Show current directory (2 levels deep by default)
 tree
@@ -72,21 +87,18 @@ tree -L -1
 # Show hidden files
 tree -a
 
-# Combine options together
-tre -a -L 3 /path/to/directory
+# Combine options
+tree -a -L 3 /path/to/directory
 ```
 
 ## Differences from Original Tree Command
-
 This implementation focuses on core functionality and differs from the original `tree` command in several ways:
-
 1. Simplified option set (only -L, -a, and -h are supported)
 2. Default depth of 2 levels (matches original tree)
 3. Basic color scheme focusing on main file types
 4. Simplified output formatting
 
 ## Limitations
-
 - Designed for Linux systems (No BSD/MacOS)
 - Does not support all options available in the original tree command
 - May not handle all special characters in filenames
@@ -95,15 +107,23 @@ This implementation focuses on core functionality and differs from the original 
 
 ## Troubleshooting
 
-1. **Command not found**:
+### Installation Issues
+1. **Quick Install Issues**:
+   - If the quick install fails, try the manual installation steps
+   - Check if you have curl installed: `which curl`
+   - Verify you have write permissions in ~/.local/bin
+   - If using a different shell, manually source your shell's rc file
+
+2. **Command not found**:
    - Ensure the script is in your `~/.local/bin`
    - Verify your PATH includes `~/.local/bin`
    - Check if the script is executable
+   - Try running `hash -r` to clear bash's path cache
 
-2. **Permission denied**:
+3. **Permission denied**:
    - Check if you have read permissions for the directories
-   - Verify the script has execute permissions
+   - Verify the script has execute permissions: `ls -l ~/.local/bin/tree`
 
-3. **No colors showing**:
+4. **No colors showing**:
    - Ensure your terminal supports ANSI colors
    - Check if your terminal's color support is enabled
