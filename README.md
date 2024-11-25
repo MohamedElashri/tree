@@ -1,91 +1,109 @@
-# Poor Man Tree Command
+# Poor Man's Tree Command
 
-This script mimics the basic functionality of the `tree` command, allowing you to list directory contents in a tree-like format with a focus on specifying depth.
+A lightweight bash implementation of the `tree` command that displays directory structure with colorization and depth control. This script provides basic tree-like directory listing with colored output for different file types (directories, files, symlinks, executables).
+
+## Features
+
+- 🎨 Color-coded output:
+  - Directories: Bold Blue
+  - Regular Files: Default Color
+  - Symbolic Links: Bold Cyan
+  - Executable Files: Bold Green
+- 📊 Depth control (default: 2 levels)
+- 📁 Directory and file count summary
+- 🔍 Optional hidden file display
+- 📝 Proper handling of symbolic links
 
 ## Installation
 
-Follow these steps to install the script and make it available globally on your system:
-
-1. **Create a `bin` Directory**: Ensure you have a `bin` directory in your home folder.
-
+1. **Create a local bin directory** (if it doesn't exist):
    ```bash
-   mkdir -p $HOME/.local/bin
+   mkdir -p ~/.local/bin
    ```
 
-2. **Download the Script**: Create a new file for the script, or download it directly.
-
+2. **Download/Copy the script**:
    ```bash
-   curl -o $HOME/.local/bin/tree https://github.com/MohamedElashri/tree/raw/main/tree
+   # Copy the script to your local bin
+   cp tree ~/.local/bin/tree
    ```
 
-   Or copy the script contents manually into a new file:
-
+3. **Make it executable**:
    ```bash
-   nano $HOME/.local/bin/tree
+   chmod +x ~/.local/bin/tree
    ```
 
-   Paste the script and save the file.
-
-3. **Make the Script Executable**: Change the permissions of the script to make it executable.
-
+4. **Add to PATH** (if not already done):
+   Add this line to your `~/.bashrc` or `~/.zshrc`:
    ```bash
-   chmod +x $HOME/.local/bin/tree
+   export PATH="$HOME/.local/bin:$PATH"
    ```
-
-4. **Add to Path**: Ensure your `.bashrc` or `.zshrc` includes `$HOME/.local/bin` in your `PATH`. Add the following line if it isn't present:
-
+   Then reload your shell configuration:
    ```bash
-   export PATH=$HOME/.local/bin:$PATH
-   ```
-
-   Then, source your shell configuration to update the `PATH`:
-
-   ```bash
-   source ~/.bashrc
-   # or
-   source ~/.zshrc
+   source ~/.bashrc  # or source ~/.zshrc
    ```
 
 ## Usage
 
-You can use the script from any terminal session. Here's how to use it:
+```bash
+tree [OPTIONS] [directory]
+```
 
-- **List the Current Directory**: Run the script without arguments to list the current directory up to a depth of 1.
+### Options
 
-  ```bash
-  tree
-  ```
+- `-L level`  : Set maximum display depth (default: 2)
+- `-a`        : Show all files, including hidden ones
+- `-h`        : Display help message
 
-- **List a Specific Directory**: Use the `-p` or `--path` option to specify a directory to list its contents.
+### Examples
 
-  ```bash
-  tree -p /path/to/directory
-  ```
+```bash
+# Show current directory (2 levels deep by default)
+tree
 
-- **Specify a Depth**: Use the `-d` or `--depth` option to set the maximum depth.
+# Show specific directory
+tree /path/to/directory
 
-  ```bash
-  tree -p /path/to/directory -d 3
-  ```
+# Show 3 levels deep
+tree -L 3
 
-- **List the Current Directory with a Specific Depth**: Specify only the depth for the current directory.
+# Show unlimited levels
+tree -L -1
 
-  ```bash
-  tree -d 3
-  ```
+# Show hidden files
+tree -a
 
-- **Help**: View the usage instructions.
+# Combine options together
+tre -a -L 3 /path/to/directory
+```
 
-  ```bash
-  tree -h
-  ```
+## Differences from Original Tree Command
 
-## Notes
+This implementation focuses on core functionality and differs from the original `tree` command in several ways:
 
-- Ensure your terminal has the necessary permissions to read the directories you want to list.
-- This script provides basic functionality and may not cover all edge cases of the full `tree` command.
+1. Simplified option set (only -L, -a, and -h are supported)
+2. Default depth of 2 levels (matches original tree)
+3. Basic color scheme focusing on main file types
+4. Simplified output formatting
+
+## Limitations
+
+- Designed for Linux systems (No BSD/MacOS)
+- Does not support all options available in the original tree command
+- May not handle all special characters in filenames
+- No pattern matching or file filtering
+- No JSON/XML/HTML output formats
 
 ## Troubleshooting
 
-- If the command is not found, ensure that `$HOME/.local/bin` is in your `PATH`.
-- If you encounter permission issues, check the directory permissions you are attempting to list.
+1. **Command not found**:
+   - Ensure the script is in your `~/.local/bin`
+   - Verify your PATH includes `~/.local/bin`
+   - Check if the script is executable
+
+2. **Permission denied**:
+   - Check if you have read permissions for the directories
+   - Verify the script has execute permissions
+
+3. **No colors showing**:
+   - Ensure your terminal supports ANSI colors
+   - Check if your terminal's color support is enabled
