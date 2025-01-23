@@ -6,13 +6,52 @@ A modern implementation of the classic `tree` command in Go, providing a visual 
 
 ### Prerequisites
 
-- Go 1.21 or higher
+- Go 1.21 or higher (only needed for building from source)
+
+### Pre-built Binaries
+
+You can download pre-built binaries for Linux and macOS from the [latest release](https://github.com/MohamedElashri/tree/releases/latest).
+
+#### System-wide installation:
+
+```bash
+# For Linux (AMD64)
+curl -L https://github.com/MohamedElashri/tree/releases/latest/download/tree-linux-amd64 -o tree
+sudo mv tree /usr/local/bin/
+sudo chmod +x /usr/local/bin/tree
+
+# For macOS (AMD64)
+curl -L https://github.com/MohamedElashri/tree/releases/latest/download/tree-darwin-amd64 -o tree
+sudo mv tree /usr/local/bin/
+sudo chmod +x /usr/local/bin/tree
+```
+
+#### User-specific installation:
+
+```bash
+# For Linux (AMD64)
+curl -L https://github.com/MohamedElashri/tree/releases/latest/download/tree-linux-amd64 -o tree
+mkdir -p ~/.local/bin
+mv tree ~/.local/bin/
+chmod +x ~/.local/bin/tree
+
+# For macOS (AMD64)
+curl -L https://github.com/MohamedElashri/tree/releases/latest/download/tree-darwin-amd64 -o tree
+mkdir -p ~/.local/bin
+mv tree ~/.local/bin/
+chmod +x ~/.local/bin/tree
+```
+
+Make sure `~/.local/bin` is in your PATH (add to ~/.bashrc, ~/.zshrc, etc. if needed):
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
 
 ### From Source
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/tree.git
+git clone https://github.com/MohamedElashri/tree
 cd tree
 ```
 
