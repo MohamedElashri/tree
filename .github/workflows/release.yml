@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*.*.*'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build and Release
@@ -44,6 +47,13 @@ jobs:
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: Prepare Release Files
+        run: |
+          mv artifacts/tree-linux-amd64/tree-linux-amd64 .
+          mv artifacts/tree-darwin-amd64/tree-darwin-amd64 .
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
