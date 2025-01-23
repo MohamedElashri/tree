@@ -36,11 +36,17 @@ Options:
   --no-color            Turn off colorized output
   -h, --help            Show this help message
 
+Commands:
+  version               Show current version
+  check-update          Check for available updates
+  update                Update to the latest version
+
 Example:
   tree
   tree /path/to/directory
   tree -L 2 -P "*.go"
   tree --dirs-only
+  tree version
 `)
 }
 
@@ -147,6 +153,27 @@ func main() {
 	flag.BoolVar(&opts.noColor, "no-color", false, "Turn off colorized output")
 	flag.BoolVar(&opts.help, "h", false, "Show help message")
 	flag.Parse()
+
+	// Handle version-related commands
+	if len(os.Args) > 1 {
+		switch os.Args[1] {
+		case "version":
+			printVersion()
+			return
+		case "check-update":
+			if err := checkForUpdate(); err != nil {
+				fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+				os.Exit(1)
+			}
+			return
+		case "update":
+			if err := updateTool(); err != nil {
+				fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+				os.Exit(1)
+			}
+			return
+		}
+	}
 
 	// Show help if requested
 	if opts.help {

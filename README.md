@@ -96,6 +96,8 @@ tree [options] [directory]
 | `tree -s` | Print size of each file |
 | `tree -h` | Print size in human readable format |
 | `tree --help` | Display help information |
+| `tree -v, --version` | Display current version |
+| `tree --update` | Update to the latest version |
 
 ## Development
 
