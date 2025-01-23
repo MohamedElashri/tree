@@ -14,13 +14,17 @@ You can download pre-built binaries for Linux and macOS from the [latest release
 
 #### System-wide installation:
 
+For Linux (AMD64)
+
 ```bash
-# For Linux (AMD64)
+
 curl -L https://github.com/MohamedElashri/tree/releases/latest/download/tree-linux-amd64 -o tree
 sudo mv tree /usr/local/bin/
 sudo chmod +x /usr/local/bin/tree
+```
+For macOS (AMD64)
 
-# For macOS (AMD64)
+```bash
 curl -L https://github.com/MohamedElashri/tree/releases/latest/download/tree-darwin-amd64 -o tree
 sudo mv tree /usr/local/bin/
 sudo chmod +x /usr/local/bin/tree
@@ -28,14 +32,17 @@ sudo chmod +x /usr/local/bin/tree
 
 #### User-specific installation:
 
+For Linux (AMD64)
+
 ```bash
-# For Linux (AMD64)
 curl -L https://github.com/MohamedElashri/tree/releases/latest/download/tree-linux-amd64 -o tree
 mkdir -p ~/.local/bin
 mv tree ~/.local/bin/
 chmod +x ~/.local/bin/tree
+```
 
-# For macOS (AMD64)
+For macOS (AMD64)
+```bash
 curl -L https://github.com/MohamedElashri/tree/releases/latest/download/tree-darwin-amd64 -o tree
 mkdir -p ~/.local/bin
 mv tree ~/.local/bin/
@@ -58,9 +65,11 @@ cd tree
 2. Build and install:
 
 #### System-wide installation (requires sudo):
+
+This will install to `/usr/local/bin/tree`
+
 ```bash
 make install
-# This will install to /usr/local/bin/tree
 ```
 
 #### User-specific installation:
@@ -68,10 +77,13 @@ make install
 make build
 mkdir -p ~/.local/bin
 cp tree ~/.local/bin/
-# Make sure ~/.local/bin is in your PATH
 ```
 
-Add this to your shell's configuration file (~/.bashrc, ~/.zshrc, etc.) if ~/.local/bin is not in your PATH:
+Make sure` ~/.local/bin` is in your PATH
+
+
+Add this to your shell's configuration file (`~/.bashrc`, `~/.zshrc`, etc.) if` ~/.local/bin` is not in your PATH:
+
 ```bash
 export PATH="$HOME/.local/bin:$PATH"
 ```
